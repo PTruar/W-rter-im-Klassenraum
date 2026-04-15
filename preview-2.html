@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Vokabelspiel – Klassenraum (mit Fortschritt)</title>
+<style>
+body { font-family: Arial; text-align:center; background: linear-gradient(135deg,#ffecd2,#fcb69f); }
+.box { margin:20px auto; padding:20px; width:320px; background:white; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.2);}
+input { font-size:18px; padding:5px; width:80%; text-align:center; }
+button { margin-top:10px; padding:8px 15px; }
+.progress { margin:10px; font-weight:bold; }
+</style>
+</head>
+<body>
+
+<h1>🧠 Vokabelspiel – Klassenraum</h1>
+<p>Ergänze die fehlenden Buchstaben!</p>
+
+<div class="progress" id="progress"></div>
+
+<div class="box">
+<h2 id="word"></h2>
+<input id="answer" placeholder="Dein Wort">
+<br>
+<button onclick="check()">Überprüfen</button>
+<p id="feedback"></p>
+</div>
+
+<script>
+let words = [
+"une table","une chaise","un sac","un livre","un cahier",
+"un stylo","une porte","une fenêtre","un tableau",
+"une trousse","un crayon","une règle"
+];
+
+let remaining = [...words];
+let wrong = [];
+let current = "";
+let correctCount = 0;
+
+function hideLetters(word){
+return word.replace(/[aeiouéèêà]/gi,"_");
+}
+
+function updateProgress(){
+document.getElementById("progress").textContent =
+"Richtig: " + correctCount + " / " + words.length +
+" | Übrig: " + remaining.length;
+}
+
+function nextWord(){
+if(remaining.length === 0){
+document.getElementById("word").textContent = "🎉 Fertig!";
+document.getElementById("feedback").textContent = "";
+return;
+}
+
+current = remaining[Math.floor(Math.random()*remaining.length)];
+document.getElementById("word").textContent = hideLetters(current);
+document.getElementById("answer").value="";
+document.getElementById("feedback").textContent="";
+updateProgress();
+}
+
+function check(){
+let input = document.getElementById("answer").value.trim().toLowerCase();
+
+if(input === current){
+correctCount++;
+remaining = remaining.filter(w => w !== current);
+document.getElementById("feedback").textContent="✅ Richtig!";
+} else {
+wrong.push(current);
+document.getElementById("feedback").textContent="❌ Falsch! Versuch nochmal später.";
+}
+
+setTimeout(nextWord, 800);
+}
+
+nextWord();
+</script>
+
+</body>
+</html>
